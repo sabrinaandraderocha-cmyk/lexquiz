@@ -212,6 +212,17 @@ QUESTIONS = [
     {"id": 134, "area": "Ética", "q": "Os honorários de sucumbência pertencem:", "options": ["Ao cliente", "Ao advogado", "Ao Estado", "Ao juiz"], "answer": 1, "explain": "O Estatuto define que os honorários de sucumbência são direito do advogado."},
     {"id": 135, "area": "Ética", "q": "O mandato judicial (procuração) extingue-se por:", "options": ["Mero decurso de tempo", "Revogação pelo cliente ou renúncia pelo advogado", "Fim do ano forense", "Vontade do juiz"], "answer": 1, "explain": "A revogação ou renúncia encerram o mandato, devendo ser notificadas."},
 ]
+from question_bank import generate_extra_questions
+
+TARGET_TOTAL = 5000
+
+max_id = max(q["id"] for q in QUESTIONS)
+extras = generate_extra_questions(
+    start_id=max_id + 1,
+    target_total=TARGET_TOTAL
+)
+
+QUESTIONS.extend(extras)
 
 # =========================================================
 # FUNÇÕES AUXILIARES
