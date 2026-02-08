@@ -5,26 +5,58 @@
 <style>
     .form-grid { display: flex; gap: 20px; }
     .form-col { flex: 1; }
-    /* No celular, empilha um embaixo do outro */
-    @media (max-width: 600px) { .form-grid { flex-direction: column; gap: 0; } }
+
+    @media (max-width: 600px) {
+        .form-grid { flex-direction: column; gap: 0; }
+    }
+
+    .bank-box{
+        margin-top:30px;
+        padding-top:20px;
+        border-top:1px solid #e2e8f0;
+        text-align:center;
+    }
+
+    .area-pill{
+        display:inline-block;
+        padding:6px 12px;
+        margin:4px;
+        border-radius:20px;
+        background:#f1f5f9;
+        font-size:0.8rem;
+        font-weight:600;
+        color:#334155;
+    }
+
+    .big-number{
+        font-size:1.6rem;
+        font-weight:700;
+        color:var(--primary);
+    }
 </style>
 
-<div style="max-width: 600px; margin: 0 auto;">
+<div style="max-width: 650px; margin: 0 auto;">
     <section class="card hero">
+
         <div style="text-align: center; margin-bottom: 25px;">
             <h1 style="color: var(--primary); margin-bottom: 10px;">
-                <i class="fas fa-graduation-cap" style="color: var(--gold);"></i> Comece seus Estudos
+                <i class="fas fa-graduation-cap" style="color: var(--gold);"></i>
+                Comece seus Estudos
             </h1>
+
             <p class="muted" style="color: #64748b; font-size: 0.95rem; line-height: 1.5;">
-                O <strong>Modo Treino</strong> oferece feedback imediato a cada questão.<br>
-                O <strong>Modo Prova</strong> simula o tempo real do exame.
+                O <strong>Modo Treino</strong> oferece feedback imediato.<br>
+                O <strong>Modo Prova</strong> simula a pressão real do exame.
             </p>
         </div>
 
         <form class="form" method="post" action="{{ url_for('start') }}">
             
             <div style="margin-bottom: 15px;">
-                <label class="label" for="area"><i class="fas fa-book"></i> Área Jurídica</label>
+                <label class="label" for="area">
+                    <i class="fas fa-book"></i> Área Jurídica
+                </label>
+
                 <select class="select" name="area" id="area" required>
                     <option value="" disabled selected>Selecione a matéria...</option>
                     {% for a in areas %}
@@ -35,7 +67,10 @@
 
             <div class="form-grid">
                 <div class="form-col">
-                    <label class="label" for="mode"><i class="fas fa-toggle-on"></i> Modo</label>
+                    <label class="label" for="mode">
+                        <i class="fas fa-toggle-on"></i> Modo
+                    </label>
+
                     <select class="select" name="mode" id="mode">
                         <option value="treino">Treino 🧠</option>
                         <option value="prova">Prova ⏱️</option>
@@ -43,17 +78,44 @@
                 </div>
 
                 <div class="form-col">
-                    <label class="label" for="n"><i class="fas fa-layer-group"></i> Qtd. (5-20)</label>
-                    <input class="input" type="number" name="n" id="n" min="5" max="20" value="10">
+                    <label class="label" for="n">
+                        <i class="fas fa-layer-group"></i> Questões (5-20)
+                    </label>
+
+                    <input class="input"
+                           type="number"
+                           name="n"
+                           id="n"
+                           min="5"
+                           max="20"
+                           value="10">
                 </div>
             </div>
 
             <button class="btn-primary" type="submit" style="margin-top: 20px;">
-                Iniciar Quiz <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
+                Iniciar Quiz
+                <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
             </button>
         </form>
 
-        </section>
+        <!-- BANCO DE QUESTÕES -->
+        <div class="bank-box">
+
+            <div class="big-number">
+                {{ total_questions }} questões disponíveis
+            </div>
+
+            <div style="margin-top:10px;">
+                {% for a in areas %}
+                    <span class="area-pill">
+                        {{ a }}: {{ counts[a] }}
+                    </span>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </section>
 </div>
 
 {% endblock %}
