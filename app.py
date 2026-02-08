@@ -255,7 +255,19 @@ def build_quiz(area: str, mode: str, n: int):
 # =========================================================
 @app.get("/")
 def index():
-    return render_template("index.html", app_name=APP_NAME, areas=AREAS)
+    counts = {a: 0 for a in AREAS}
+
+    for q in QUESTIONS:
+        if q["area"] in counts:
+            counts[q["area"]] += 1
+
+    return render_template(
+        "index.html",
+        app_name=APP_NAME,
+        areas=AREAS,
+        total_questions=len(QUESTIONS),
+        counts=counts
+    )
 
 @app.post("/start")
 def start():
