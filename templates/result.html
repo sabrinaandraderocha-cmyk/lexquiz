@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="max-width: 800px; margin: 0 auto;">
+
+  <section class="card score-display" style="text-align: center;">
+    
+    <div class="score-circle">
+      {{ quiz.score }}/{{ quiz.n }}
+    </div>
+
+    <h2 style="color: var(--primary); margin: 10px 0;">Resultado Final</h2>
+    
+    <p class="muted" style="color: #64748b; margin-bottom: 20px;">
+        Área: <strong>{{ quiz.area }}</strong> &bull; Modo: <strong>{{ quiz.mode|capitalize }}</strong>
+    </p>
+
+    {% set percent = ((quiz.score / quiz.n) * 100) | round(0) | int %}
+    <div style="background: #e2e8f0; border-radius: 10px; height: 10px; width: 100%; max-width: 300px; margin: 0 auto 20px; overflow: hidden;">
+        <div style="width: {{ percent }}%; background: {{ '#10b981' if percent >= 70 else '#f59e0b' if percent >= 40 else '#ef4444' }}; height: 100%;"></div>
+    </div>
+    <p style="font-size: 0.9rem; font-weight: bold; color: var(--primary);">
+        Aproveitamento: {{ percent }}%
+    </p>
+
+    <div class="actions" style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+      <a class="btn-primary" href="{{ url_for('reset') }}" style="max-width: 200px;">
+        <i class="fas fa-redo"></i> Jogar de Novo
+      </a>
+      <a href="{{ url_for('index') }}" style="display: flex; align-items: center; justify-content: center; padding: 0 20px; color: #64748b; text-decoration: none; font-weight: 600;">
+        <i class="fas fa-home"></i>&nbsp; Início
+      </a>
+    </div>
+  </section>
+
+  <h3 style="color: var(--primary); margin-top: 40px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+    <i class="fas fa-list-check"></i> Revisão Detalhada
+  </h3>
+
+  <div class="review">
+    {% for d in details %}
+      <div class="review-item {{ 'correct' if d.is_correct else 'wrong' }}">
+        
+        <div class="review-head" style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: bold; color: {{ '#10b981' if d.is_correct else '#ef4444' }};">
+            <i class="fas {{ 'fa-check' if d.is_correct else 'fa-times' }}"></i>
+            {{ 'ACERTOU' if d.is_correct else 'ERROU' }}
+          </span>
+          <span style="font-size: 0.75rem; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; color: #64748b;">
+            Questão {{ loop.index }}
+          </span>
+        </div>
+
+        <h4 class="review-q" style="margin: 0 0 15px 0; color: var(--primary);">
+            {{ d.q }}
+        </h4>
+
+        <div class="review-a" style="font-size: 0.95rem;">
+          
+          <div style="margin-bottom: 8px;">
+            <span class="muted small" style="color: #64748b;">Sua resposta:</span>
+            <span style="font-weight: 600; color: var(--text-main);">
+              {% if d.chosen >= 0 %}
+                {{ d.options[d.chosen] }}
+              {% else %}
+                <span style="color: #ef4444; font-style: italic;">Não respondeu (Tempo esgotado)</span>
+              {% endif %}
+            </span>
+          </div>
+
+          {% if not d.is_correct %}
+            <div style="margin-bottom: 15px;">
+                <span class="muted small" style="color: #64748b;">Gabarito:</span>
+                <span style="font-weight: 600; color: #10b981;">{{ d.options[d.correct] }}</span>
+            </div>
+          {% endif %}
+
+          <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem; color: #475569;">
+             <strong>💡 Explicação:</strong> {{ d.explain }}
+          </div>
+
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

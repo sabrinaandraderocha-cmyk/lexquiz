@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .timer-container {
+        background: #e2e8f0;
+        height: 6px;
+        border-radius: 3px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .timer-bar {
+        height: 100%;
+        background: var(--gold); /* Dourado */
+        width: 100%;
+        transform-origin: left;
+        transition: transform 1s linear;
+    }
+
+    .ghost-link {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+    .ghost-link:hover { color: var(--primary); text-decoration: underline; }
+</style>
+
+<div style="max-width: 700px; margin: 0 auto;">
+
+    {% if session.get('last_feedback') %}
+        {% set fb = session.get('last_feedback') %}
+        <div class="feedback-box {{ 'correct' if fb.is_correct else 'wrong' }}">
+            <div style="display: flex; align-items: start; gap: 10px;">
+                <i class="fas {{ 'fa-check-circle' if fb.is_correct else 'fa-times-circle' }}" style="font-size: 1.2rem; margin-top: 2px;"></i>
+                <div>
+                    <strong>{{ 'Resposta Correta!' if fb.is_correct else 'Resposta Incorreta.' }}</strong>
+                    <div style="margin-top: 5px; font-size: 0.95rem; opacity: 0.9;">
+                        {{ fb.explain }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="quiz-header">
+        <div>
+            <span style="background: var(--primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; margin-right: 8px;">
+                {{ quiz.area }}
+            </span>
+            <span>{{ quiz.mode|capitalize }}</span>
+        </div>
+        <div>
+            Questão <span style="color: var(--primary); font-size: 1.1rem;">{{ pos + 1 }}</span> de {{ quiz.n }}
+        </div>
+    </div>
+
+    <div class="card">
+        
+        {% if time_limit %}
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: #ef4444; font-weight: bold;">
+                <span><i class="fas fa-stopwatch"></i> Tempo Restante</span>
+                <span id="timerText">{{ time_limit }}s</span>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timerBar"></div>
+            </div>
+        {% endif %}
+
+        <h2 class="question" style="margin-top: 0; color: var(--primary); line-height: 1.4;">
+            {{ q.q }}
+        </h2>
+
+        <form method="post" action="{{ url_for('answer') }}">
+            
+            {% for opt in q.options %}
+            <label class="quiz-option">
+                <input type="radio" name="choice" value="{{ loop.index0 }}" required>
+                <span style="margin-left: 8px;">{{ opt }}</span>
+            </label>
+            {% endfor %}
+
+            <button class="btn-primary" type="submit" style="margin-top: 20px;">
+                Confirmar Resposta <i class="fas fa-check"></i>
+            </button>
+            
+            <a class="ghost-link" href="{{ url_for('reset') }}">
+                <i class="fas fa-sign-out-alt"></i> Sair e voltar ao início
+            </a>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Lógica simples do Timer para o Modo Prova
+    const timeLimit = {{ time_limit if time_limit else "null" }};
+    
+    if (timeLimit) {
+        let timeLeft = timeLimit;
+        const timerBar = document.getElementById('timerBar');
+        const timerText = document.getElementById('timerText');
+        
+        // CSS Animation para a barra diminuir suavemente
+        timerBar.style.transition = `width ${timeLimit}s linear`;
+        
+        // Pequeno delay para garantir que o CSS carregou antes de iniciar a animação
+        setTimeout(() => {
+            timerBar.style.width = '0%';
+        }, 100);
+
+        // Contador numérico
+        const interval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft >= 0) {
+                timerText.innerText = timeLeft + "s";
+            } else {
+                clearInterval(interval);
+                alert("Tempo esgotado! Passando para a próxima...");
+                // Aqui você poderia forçar o submit do form automaticamente
+                // document.querySelector('form').submit();
+            }
+        }, 1000);
+    }
+</script>
+{% endblock %}
