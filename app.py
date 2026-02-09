@@ -384,7 +384,7 @@ def result():
         q = q_by_id(a["id"])
         if not q:
             continue
-        # Passa o dicionário completo da questão, incluindo "difficulty" se existir
+
         q_data = {
             "area": q["area"],
             "q": q["q"],
@@ -394,17 +394,62 @@ def result():
             "is_correct": a["is_correct"],
             "explain": q["explain"],
         }
+
         if "difficulty" in q:
             q_data["difficulty"] = q["difficulty"]
-            
+
         details.append(q_data)
+
+    # ===== SALVAR ERROS PARA REVISÃO =====
+    wrong_ids = [a["id"] for a in quiz["answers"] if not a.get("is_correct")]
+    session["wrong_ids"] = wrong_ids
+
+    # desempenho por área
+    per_area = {}
+
+    for d in details:
+        area = d["area"]
+
+        if area not in per_area:
+            per_area[area] = {"total": 0, "correct": 0}
+
+        per_area[area]["total"] += 1
+
+        if d["is_correct"]:
+            per_area[area]["correct"] += 1
+
+    session["last_per_area"] = per_area
 
     return render_template(
         "result.html",
         app_name=APP_NAME,
         quiz=quiz,
-        details=details
+        details=details,
+        per_area=per_area
     )
+
+@app.get("/review")
+def review():
+    wrong_ids = session.get("wrong_ids", [])
+
+    if not wrong_ids:
+        flash("Você não tem erros para revisar ainda.")
+        return redirect(url_for("index"))
+
+    quiz = {
+        "area": "Revisão de Erros",
+        "mode": "treino",
+        "n": min(20, len(wrong_ids)),
+        "items": wrong_ids[:20],
+        "pos": 0,
+        "score": 0,
+        "answers": [],
+    }
+
+    session["quiz"] = quiz
+    session.pop("last_feedback", None)
+
+    return redirect(url_for("question"))
 
 @app.get("/reset")
 def reset():
