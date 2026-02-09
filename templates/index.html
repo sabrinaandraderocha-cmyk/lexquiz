@@ -1,91 +1,63 @@
-<!doctype html>
-<html lang="pt-br">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Plataforma de estudos para concursos jurídicos e OAB.">
-  
-  <title>{{ app_name }} | LexQuiz</title>
+{% extends "base.html" %}
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% block content %}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
-</head>
-
-<body>
-
-  <header class="topbar">
-    <div class="container topbar-inner">
-
-      <a href="{{ url_for('index') }}" class="brand-link" style="text-decoration: none; color: inherit;">
-        <div class="brand">
-            <img 
-              src="{{ url_for('static', filename='logo.png') }}" 
-              alt="Logo LexQuiz" 
-              class="logo" 
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-            >
-            <i class="fas fa-balance-scale" style="display:none; font-size: 2rem; color: var(--gold); margin-right: 10px;"></i>
-
-            <div class="brand-text">
-                <div class="brand-title">{{ app_name }}</div>
-                <div class="brand-subtitle">Estudos Jurídicos</div>
-            </div>
-        </div>
-      </a>
-
-      <nav class="nav">
-        <a href="{{ url_for('index') }}" class="nav-item">
-          <i class="fa-solid fa-house"></i> 
-          <span class="nav-text">Início</span>
-        </a>
-
-        <a href="{{ url_for('reset') }}" class="nav-item btn-reset" title="Reiniciar Quiz">
-          <i class="fa-solid fa-rotate"></i> 
-          <span class="nav-text">Reiniciar</span>
-        </a>
-      </nav>
-
+<div style="max-width: 680px; margin: 0 auto;">
+  <section class="card hero">
+    <div style="text-align:center; margin-bottom: 22px;">
+      <h1 style="margin:0; color: var(--navy); font-size: 1.9rem;">
+        <i class="fa-solid fa-graduation-cap" style="color: var(--gold); margin-right: 6px;"></i>
+        Comece seus Estudos
+      </h1>
+      <p class="muted" style="margin: 10px 0 0; color:#64748b; font-size:0.95rem; line-height:1.5;">
+        <strong>Modo Treino</strong> oferece feedback imediato.<br>
+        <strong>Modo Prova</strong> simula tempo real por questão.
+      </p>
     </div>
-  </header>
 
-  <main class="container main-content">
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash-container">
-          {% for msg in messages %}
-            <div class="flash-message">
-              <i class="fa-solid fa-circle-exclamation"></i> {{ msg }}
-            </div>
+    <form class="form" method="post" action="{{ url_for('start') }}">
+      <div style="margin-bottom: 15px;">
+        <label class="label" for="area">
+          <i class="fa-solid fa-book"></i> Área Jurídica
+        </label>
+        <select class="select" name="area" id="area" required>
+          <option value="" disabled selected>Selecione a matéria...</option>
+          {% for a in areas %}
+            <option value="{{ a }}">{{ a }}</option>
           {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-grid" style="display:flex; gap: 20px;">
+        <div style="flex:1;">
+          <label class="label" for="mode">
+            <i class="fa-solid fa-toggle-on"></i> Modo
+          </label>
+          <select class="select" name="mode" id="mode">
+            <option value="treino">Treino 🧠</option>
+            <option value="prova">Prova ⏱️</option>
+          </select>
         </div>
-      {% endif %}
-    {% endwith %}
 
-    {% block content %}{% endblock %}
-
-  </main>
-
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-left">
-        <strong>⚖️ {{ app_name }}</strong> &copy; 2026
+        <div style="flex:1;">
+          <label class="label" for="n">
+            <i class="fa-solid fa-layer-group"></i> Qtd. (5-20)
+          </label>
+          <input class="input" type="number" name="n" id="n" min="5" max="20" value="10">
+        </div>
       </div>
-      
-      <div class="footer-right">
-        <small>Foco na aprovação 🚀</small>
-      </div>
-    </div>
-  </footer>
 
-  {% block scripts %}{% endblock %}
+      <button class="btn-primary" type="submit" style="margin-top: 18px;">
+        Iniciar Quiz <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+      </button>
+    </form>
+  </section>
+</div>
 
-</body>
-</html>
+<style>
+  @media (max-width: 600px) {
+    .form-grid { flex-direction: column; gap: 10px !important; }
+  }
+</style>
+
+{% endblock %}
