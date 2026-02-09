@@ -4,52 +4,93 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ app_name }}</title>
+
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- Fonte moderna -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
 </head>
 
 <body>
+
+  <!-- ================= TOPBAR ================= -->
+
   <header class="topbar">
     <div class="container topbar-inner">
+
+      <!-- LOGO -->
       <div class="brand">
-        <div class="mark">
-          <span class="icon">⚖️</span>
-        </div>
+
+        <img 
+          src="{{ url_for('static', filename='logo.png') }}"
+          alt="LexQuiz"
+          class="logo"
+        >
 
         <div class="brand-text">
           <div class="brand-title">{{ app_name }}</div>
-          <div class="brand-subtitle">Quiz de Direito</div>
+          <div class="brand-subtitle">Plataforma de Estudos Jurídicos</div>
         </div>
+
       </div>
 
+      <!-- MENU -->
       <nav class="nav">
-        <a href="{{ url_for('index') }}">Início</a>
-        <a href="{{ url_for('reset') }}">Reiniciar</a>
+        <a href="{{ url_for('index') }}">
+          <i class="fa-solid fa-house"></i> Início
+        </a>
+
+        <a href="{{ url_for('reset') }}">
+          <i class="fa-solid fa-rotate"></i> Reiniciar
+        </a>
       </nav>
+
     </div>
   </header>
 
+  <!-- ================= CONTEÚDO ================= -->
+
   <main class="container main-content">
+
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <div class="flash">
           {% for msg in messages %}
-            <div class="flash-item">{{ msg }}</div>
+            <div class="flash-item">
+              <i class="fa-solid fa-circle-info"></i> {{ msg }}
+            </div>
           {% endfor %}
         </div>
       {% endif %}
     {% endwith %}
 
     {% block content %}{% endblock %}
+
   </main>
+
+  <!-- ================= FOOTER ================= -->
 
   <footer class="footer">
     <div class="container footer-inner">
-      <span class="muted">LexQuiz &copy; 2026</span>
-      <span class="muted">Estudo rápido e direto</span>
+
+      <span class="muted">
+        ⚖️ LexQuiz © 2026
+      </span>
+
+      <span class="muted">
+        Desenvolvido para acelerar sua aprovação 🚀
+      </span>
+
     </div>
   </footer>
 
   {% block scripts %}{% endblock %}
+
 </body>
 </html>
