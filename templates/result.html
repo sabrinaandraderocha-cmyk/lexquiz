@@ -4,110 +4,111 @@
 
 <div style="max-width: 800px; margin: 0 auto;">
 
-  <section class="card score-display" style="text-align: center;">
-    
-    <div class="score-circle">
-      {{ quiz.score }}/{{ quiz.n }}
-    </div>
+    <div class="card result-hero">
+        <h2 style="color: var(--text-light); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+            Resultado Final
+        </h2>
 
-    <h2 style="color: var(--primary); margin: 10px 0;">Resultado Final</h2>
-    
-    <p class="muted" style="color: #64748b; margin-bottom: 20px;">
-        Área: <strong>{{ quiz.area }}</strong> &bull; Modo: <strong>{{ quiz.mode|capitalize }}</strong>
-    </p>
+        <div class="score-circle">
+            {{ quiz.score }}<span style="font-size: 2.5rem; color: #94a3b8; font-weight: 400;">/{{ quiz.n }}</span>
+        </div>
 
-    {% set percent = ((quiz.score / quiz.n) * 100) | round(0) | int %}
-    <div style="background: #e2e8f0; border-radius: 10px; height: 10px; width: 100%; max-width: 300px; margin: 0 auto 20px; overflow: hidden;">
-        <div style="width: {{ percent }}%; background: {{ '#10b981' if percent >= 70 else '#f59e0b' if percent >= 40 else '#ef4444' }}; height: 100%;"></div>
-    </div>
-    <p style="font-size: 0.9rem; font-weight: bold; color: var(--primary);">
-        Aproveitamento: {{ percent }}%
-    </p>
-
-    <!-- DESEMPENHO POR ÁREA -->
-    {% if per_area %}
-      <div class="card" style="margin: 18px auto 0; padding: 14px; max-width: 720px; text-align: left;">
-        <h3 style="margin: 0 0 10px 0; color: var(--primary);">
-          <i class="fas fa-chart-pie"></i> Desempenho por área
-        </h3>
-
-        <div style="display:flex; flex-wrap:wrap; gap:10px;">
-          {% for area, v in per_area.items() %}
-            <div style="background:#f1f5f9; padding:10px 12px; border-radius:12px; font-weight:600; color:#334155;">
-              {{ area }}: <strong>{{ v.correct }}</strong>/{{ v.total }}
+        {% set percent = ((quiz.score / quiz.n) * 100) | round | int %}
+        <div style="margin-bottom: 15px;">
+            <div style="font-size: 1.5rem; font-weight: 700; color: {{ '#10b981' if percent >= 70 else '#f59e0b' if percent >= 40 else '#ef4444' }}; margin-bottom: 5px;">
+                {{ percent }}% de Aproveitamento
             </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
-
-    <div class="actions" style="margin-top: 22px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-      <a class="btn-primary" href="{{ url_for('reset') }}" style="max-width: 220px;">
-        <i class="fas fa-redo"></i> Jogar de Novo
-      </a>
-
-      {% if session.get("wrong_ids") and session.get("wrong_ids")|length > 0 %}
-        <a class="btn-primary" href="{{ url_for('review') }}" style="max-width: 260px;">
-          <i class="fas fa-bullseye"></i> Revisar erros ({{ session.get("wrong_ids")|length }})
-        </a>
-      {% endif %}
-
-      <a href="{{ url_for('index') }}" style="display: flex; align-items: center; justify-content: center; padding: 0 20px; color: #64748b; text-decoration: none; font-weight: 600;">
-        <i class="fas fa-home"></i>&nbsp; Início
-      </a>
-    </div>
-  </section>
-
-  <h3 style="color: var(--primary); margin-top: 40px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
-    <i class="fas fa-list-check"></i> Revisão Detalhada
-  </h3>
-
-  <div class="review">
-    {% for d in details %}
-      <div class="review-item {{ 'correct' if d.is_correct else 'wrong' }}">
-        
-        <div class="review-head" style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: bold; color: {{ '#10b981' if d.is_correct else '#ef4444' }};">
-            <i class="fas {{ 'fa-check' if d.is_correct else 'fa-times' }}"></i>
-            {{ 'ACERTOU' if d.is_correct else 'ERROU' }}
-          </span>
-          <span style="font-size: 0.75rem; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; color: #64748b;">
-            Questão {{ loop.index }}
-          </span>
-        </div>
-
-        <h4 class="review-q" style="margin: 0 0 15px 0; color: var(--primary);">
-            {{ d.q }}
-        </h4>
-
-        <div class="review-a" style="font-size: 0.95rem;">
-          
-          <div style="margin-bottom: 8px;">
-            <span class="muted small" style="color: #64748b;">Sua resposta:</span>
-            <span style="font-weight: 600; color: var(--text-main);">
-              {% if d.chosen >= 0 %}
-                {{ d.options[d.chosen] }}
-              {% else %}
-                <span style="color: #ef4444; font-style: italic;">Não respondeu (Tempo esgotado)</span>
-              {% endif %}
-            </span>
-          </div>
-
-          {% if not d.is_correct %}
-            <div style="margin-bottom: 15px;">
-                <span class="muted small" style="color: #64748b;">Gabarito:</span>
-                <span style="font-weight: 600; color: #10b981;">{{ d.options[d.correct] }}</span>
+            
+            <div class="progress-bar-bg" style="height: 12px; max-width: 300px; margin: 0 auto;">
+                <div class="progress-bar-fill" style="width: {{ percent }}%; background: {{ '#10b981' if percent >= 70 else '#f59e0b' if percent >= 40 else '#ef4444' }};"></div>
             </div>
-          {% endif %}
-
-          <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem; color: #475569;">
-             <strong>💡 Explicação:</strong> {{ d.explain }}
-          </div>
-
         </div>
-      </div>
-    {% endfor %}
-  </div>
+
+        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 25px;">
+            Área: <strong>{{ quiz.area }}</strong> &bull; Modo: <strong>{{ quiz.mode|capitalize }}</strong>
+        </p>
+
+        {% if per_area and per_area|length > 1 %}
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px;">
+                {% for area, v in per_area.items() %}
+                    <span class="badge badge-diff" style="font-size: 0.85rem; padding: 6px 12px;">
+                        {{ area }}: <strong style="color: var(--primary);">{{ v.correct }}/{{ v.total }}</strong>
+                    </span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="result-actions">
+            <a href="{{ url_for('index') }}" class="btn-outline">
+                <i class="fas fa-home"></i> Menu Inicial
+            </a>
+
+            <a href="{{ url_for('reset') }}" class="btn-primary" style="width: auto;">
+                <i class="fas fa-redo"></i> Jogar Novamente
+            </a>
+            
+            {% if session.get("wrong_ids") %}
+                <a href="{{ url_for('review') }}" class="btn-primary" style="background: var(--accent); width: auto;">
+                    <i class="fas fa-book-reader"></i> Revisar Erros
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <h3 style="margin: 30px 0 20px; color: var(--primary); border-left: 5px solid var(--gold); padding-left: 15px;">
+        Gabarito Comentado
+    </h3>
+
+    <div class="review-list">
+        {% for d in details %}
+            <div class="card history-card {{ 'hist-correct' if d.is_correct else 'hist-wrong' }}">
+                
+                <div class="hist-header">
+                    <span class="badge badge-area">{{ d.area }}</span>
+                    
+                    {% if d.is_correct %}
+                        <span class="status-badge st-ok"><i class="fas fa-check"></i> ACERTOU</span>
+                    {% else %}
+                        <span class="status-badge st-err"><i class="fas fa-times"></i> ERROU</span>
+                    {% endif %}
+                </div>
+
+                <div class="q-text" style="font-size: 1.1rem; margin-bottom: 15px;">
+                    {{ d.q }}
+                </div>
+
+                <div class="hist-options">
+                    <div style="margin-bottom: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-light);">Sua resposta:</span><br>
+                        {% if d.chosen >= 0 %}
+                            <span style="font-weight: 600; color: {{ 'var(--success)' if d.is_correct else 'var(--error)' }};">
+                                {{ d.options[d.chosen] }}
+                            </span>
+                        {% else %}
+                            <span style="font-weight: 600; color: var(--text-light); font-style: italic;">
+                                <i class="far fa-clock"></i> Tempo esgotado (Não respondeu)
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if not d.is_correct %}
+                        <div style="margin-bottom: 15px;">
+                            <span style="font-size: 0.85rem; color: var(--text-light);">Resposta correta:</span><br>
+                            <span style="font-weight: 600; color: var(--success);">
+                                {{ d.options[d.correct] }}
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="feedback-box {{ 'feed-correct' if d.is_correct else 'feed-wrong' }}" style="margin-top: 15px; font-size: 0.95rem;">
+                    <strong><i class="fas fa-lightbulb"></i> Explicação:</strong> {{ d.explain }}
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+
 </div>
 
 {% endblock %}
