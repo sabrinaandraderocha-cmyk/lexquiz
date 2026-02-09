@@ -1,8 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from whitenoise import WhiteNoise
 import random
 import secrets
+import os
 
 app = Flask(__name__)
+
+# =========================================================
+# CONFIGURAÇÃO DE ARQUIVOS ESTÁTICOS (WHITENOISE)
+# =========================================================
+# Isso corrige o erro de imagens/css com 0 bytes no Render
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/', prefix='static/')
+
 # Chave secreta para segurança da sessão
 app.secret_key = secrets.token_hex(24)
 
@@ -209,10 +218,6 @@ QUESTIONS = [
     {"id": 135, "area": "Ética", "q": "O mandato judicial (procuração) extingue-se por:", "options": ["Mero decurso de tempo", "Revogação pelo cliente ou renúncia pelo advogado", "Fim do ano forense", "Vontade do juiz"], "answer": 1, "explain": "A revogação ou renúncia encerram o mandato, devendo ser notificadas."},
 ]
 
-# REMOVIDO O GERADOR DE QUESTÕES FALSAS QUE CAUSAVA DUPLICAÇÃO
-# from question_bank import generate_extra_questions
-# ... lógica de duplicar deletada ...
-
 # =========================================================
 # FUNÇÕES AUXILIARES
 # =========================================================
@@ -229,7 +234,6 @@ def build_quiz(area: str, mode: str, n: int):
     pool = get_questions_by_area(area)
     
     # PROTEÇÃO: Garante que não pede mais questões do que existem
-    # Se houver 15 questões e n=20, ajusta para 15.
     available_count = len(pool)
     n = min(n, available_count)
     
