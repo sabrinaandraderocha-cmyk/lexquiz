@@ -95,7 +95,9 @@
             </div>
         </div>
 
-        <a href="{{ url_for('question') }}" class="btn-primary">
+        {# ✅ CORREÇÃO: em vez de voltar pra /q (que reexibe o feedback),
+           vai para a rota que limpa o feedback e então redireciona para /q #}
+        <a href="{{ url_for('next_question') }}" class="btn-primary">
             Próxima Questão <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
         </a>
 
@@ -173,9 +175,8 @@
         const form = document.getElementById('quizForm');
         
         // Inicia a animação da barra via CSS Transition
-        // O setTimeout garante que o navegador renderizou a largura 100% antes de mudar para 0%
         setTimeout(() => {
-            if(timerBar) {
+            if (timerBar) {
                 timerBar.style.transition = `width ${timeLimit}s linear`;
                 timerBar.style.width = '0%';
             }
@@ -184,11 +185,18 @@
         const interval = setInterval(() => {
             timeLeft--;
             if (timeLeft >= 0) {
-                if(timerText) timerText.innerText = timeLeft + "s";
+                if (timerText) timerText.innerText = timeLeft + "s";
             } else {
                 clearInterval(interval);
-                // Submete o formulário automaticamente (conta como erro/em branco no backend se não selecionado)
-                if(form) form.submit();
+
+                // Se ninguém marcou nada, remove o required pra permitir submit automático
+                const checked = form ? form.querySelector('input[name="choice"]:checked') : null;
+                if (!checked && form) {
+                    const radios = form.querySelectorAll('input[name="choice"]');
+                    radios.forEach(r => r.required = false);
+                }
+
+                if (form) form.submit();
             }
         }, 1000);
     }
