@@ -22,7 +22,7 @@ AREAS = [
 ]
 
 # =========================================================
-# BANCO DE QUESTÕES (TOTAL ATUAL: 170)
+# BANCO DE QUESTÕES (Limpo e sem duplicatas)
 # =========================================================
 QUESTIONS = [
     # -------------------- DIREITO CIVIL (Geral) --------------------
@@ -51,7 +51,7 @@ QUESTIONS = [
     {"id": 103, "area": "Direito Civil", "q": "A usucapião extraordinária de bem imóvel exige posse ininterrupta por:", "options": ["5 anos", "10 anos", "15 anos", "20 anos"], "answer": 2, "explain": "A regra geral da extraordinária é 15 anos, independente de título e boa-fé."},
     {"id": 104, "area": "Direito Civil", "q": "Alimentos avoengos (pagos pelos avós) têm natureza:", "options": ["Solidária", "Subsidiária e complementar", "Principal", "Indenizatória"], "answer": 1, "explain": "Os avós só pagam se os pais não tiverem condições (subsidiária) ou para completar (complementar)."},
 
-    # --- NOVO: DIREITO CIVIL - OBRIGAÇÕES (151-160) ---
+    # --- DIREITO CIVIL - OBRIGAÇÕES ---
     {"id": 151, "area": "Direito Civil", "difficulty": "Média", "q": "Nas obrigações solidárias passivas, o pagamento parcial feito por um dos devedores e a remissão por ele obtida:", "options": ["Extinguem a dívida para todos", "Não aproveitam aos outros devedores", "Aproveitam aos outros até a concorrência da quantia paga ou relevada", "Tornam a obrigação indivisível"], "answer": 2, "explain": "Art. 277, CC: O pagamento parcial ou a remissão aproveitam aos outros devedores apenas até o montante pago ou perdoado."},
     {"id": 152, "area": "Direito Civil", "difficulty": "Fácil", "q": "A cláusula penal (multa contratual) não pode exceder:", "options": ["10% do valor do contrato", "O valor da obrigação principal", "O dobro da obrigação principal", "50 salários mínimos"], "answer": 1, "explain": "Art. 412, CC: O valor da cominação imposta na cláusula penal não pode exceder o da obrigação principal."},
     {"id": 153, "area": "Direito Civil", "difficulty": "Difícil", "q": "Na cessão de crédito onerosa, salvo disposição em contrário, o cedente responde:", "options": ["Pela solvência do devedor", "Pela existência do crédito ao tempo da cessão", "Solidariamente com o devedor", "Por nada"], "answer": 1, "explain": "Art. 295, CC: O cedente garante a existência do crédito (pro soluto), mas não a solvência do devedor (pro solvendo), salvo estipulação."},
@@ -63,7 +63,7 @@ QUESTIONS = [
     {"id": 159, "area": "Direito Civil", "difficulty": "Fácil", "q": "Para que ocorra a compensação legal, as dívidas devem ser:", "options": ["Líquidas, vencidas e de coisas fungíveis", "Iliquidas e vincendas", "De qualquer natureza", "Apenas em dinheiro"], "answer": 0, "explain": "Art. 369, CC: Exige-se reciprocidade, liquidez, exigibilidade (vencidas) e fungibilidade."},
     {"id": 160, "area": "Direito Civil", "difficulty": "Média", "q": "Nas obrigações de resultado, o devedor:", "options": ["Só se obriga a ser prudente", "Obriga-se a alcançar determinado fim", "Não responde por culpa", "Sempre responde por caso fortuito"], "answer": 1, "explain": "Diferente da obrigação de meio (onde basta a diligência), na de resultado o fim deve ser atingido (ex: transporte, cirurgia plástica estética)."},
 
-    # -------------------- DIREITO PENAL (Geral) --------------------
+    # -------------------- DIREITO PENAL --------------------
     {"id": 21, "area": "Direito Penal", "q": "No conceito analítico, crime é:", "options": ["qualquer ilegalidade", "conduta típica, ilícita e culpável", "qualquer ato imoral", "somente o que dá prisão"], "answer": 1, "explain": "No conceito analítico, consideram-se tipicidade, ilicitude e culpabilidade."},
     {"id": 22, "area": "Direito Penal", "q": "Dolo ocorre quando o agente:", "options": ["age com negligência", "quer o resultado ou assume o risco", "não prevê o resultado", "age sem conduta"], "answer": 1, "explain": "Dolo: vontade dirigida ao resultado ou assunção do risco."},
     {"id": 23, "area": "Direito Penal", "q": "Culpa ocorre, em geral, por:", "options": ["imprudência, negligência ou imperícia", "planejamento", "vingança", "obediência à lei"], "answer": 0, "explain": "Culpa envolve violação do dever de cuidado."},
@@ -89,8 +89,6 @@ QUESTIONS = [
     {"id": 108, "area": "Direito Penal", "q": "Apropriar-se de coisa alheia móvel, de que tem a posse ou a detenção, configura:", "options": ["Furto mediante fraude", "Estelionato", "Apropriação indébita", "Roubo"], "answer": 2, "explain": "O dolo surge depois de já ter a posse lícita da coisa."},
     {"id": 109, "area": "Direito Penal", "q": "Não se pune o aborto praticado por médico se:", "options": ["A gravidez resulta de estupro (com consentimento)", "A gestante é menor de 21 anos", "O pai da criança não quer", "A gestante está desempregada"], "answer": 0, "explain": "Aborto sentimental/humanitário (caso de estupro) e necessário (risco de vida) são permitidos."},
     {"id": 110, "area": "Direito Penal", "q": "A corrupção passiva é crime praticado por:", "options": ["Particular contra administração", "Funcionário público", "Juiz apenas", "Advogado"], "answer": 1, "explain": "Corrupção passiva é crime funcional (praticado por funcionário público)."},
-    
-    # --- DIREITO PENAL - ARTS. 100-120 (136-150) ---
     {"id": 136, "area": "Direito Penal", "difficulty": "Fácil", "q": "A ação penal pública é promovida pelo Ministério Público e, salvo disposição em contrário, é:", "options": ["Condicionada à requisição", "Privada", "Incondicionada", "Subsidiária"], "answer": 2, "explain": "Art. 100, CP: A ação penal é pública, salvo quando a lei declara privativa do ofendido. A regra é ser incondicionada."},
     {"id": 137, "area": "Direito Penal", "difficulty": "Média", "q": "O direito de queixa ou de representação decai se não exercido no prazo de:", "options": ["3 meses", "6 meses", "1 ano", "2 anos"], "answer": 1, "explain": "Art. 103, CP: O prazo decadencial é de 6 meses, contados do dia em que veio a saber quem é o autor do crime."},
     {"id": 138, "area": "Direito Penal", "difficulty": "Média", "q": "Na ação penal privada, o perdão do ofendido:", "options": ["Independe de aceitação do querelado", "Aproveita a todos os querelados, se concedido a um", "Não obsta o prosseguimento da ação", "Só pode ser expresso"], "answer": 1, "explain": "Art. 106, I, CP: O perdão concedido a um dos querelados aproveita a todos (princípio da indivisibilidade)."},
@@ -107,7 +105,7 @@ QUESTIONS = [
     {"id": 149, "area": "Direito Penal", "difficulty": "Média", "q": "A perempção (Art. 107, IV) é causa de extinção da punibilidade que ocorre apenas:", "options": ["Na ação penal pública", "Na ação penal privada", "Nos crimes hediondos", "No tribunal do júri"], "answer": 1, "explain": "A perempção é sanção à inércia ou negligência do querelante exclusivamente na ação penal privada."},
     {"id": 150, "area": "Direito Penal", "difficulty": "Fácil", "q": "Se a pena máxima privativa de liberdade é superior a 12 anos, a prescrição ocorre em:", "options": ["10 anos", "15 anos", "20 anos", "30 anos"], "answer": 2, "explain": "Art. 109, I, CP: Prescreve em 20 anos se o máximo da pena é superior a 12."},
 
-    # -------------------- DIREITO CONSTITUCIONAL (Geral) --------------------
+    # -------------------- DIREITO CONSTITUCIONAL --------------------
     {"id": 41, "area": "Direito Constitucional", "q": "A Constituição Federal de 1988 é considerada:", "options": ["flexível", "rígida", "costumeira", "não escrita"], "answer": 1, "explain": "É rígida porque tem procedimento mais difícil para alteração."},
     {"id": 42, "area": "Direito Constitucional", "q": "Fundamento da República Federativa do Brasil:", "options": ["ampla defesa", "dignidade da pessoa humana", "coisa julgada", "competência"], "answer": 1, "explain": "Dignidade da pessoa humana é fundamento (art. 1º, CF)."},
     {"id": 43, "area": "Direito Constitucional", "q": "Separação dos Poderes envolve:", "options": ["Legislativo, Executivo e Judiciário", "MP, Defensoria e OAB", "União, Estados e Municípios", "Congresso, STF e Polícia"], "answer": 0, "explain": "A separação clássica envolve Legislativo, Executivo e Judiciário."},
@@ -133,8 +131,6 @@ QUESTIONS = [
     {"id": 113, "area": "Direito Constitucional", "q": "São legitimados para propor ADI, EXCETO:", "options": ["Presidente da República", "OAB (Conselho Federal)", "Juiz de 1º grau", "Partido Político com representação no Congresso"], "answer": 2, "explain": "Juízes singulares realizam controle difuso, não podem propor ADI (controle concentrado)."},
     {"id": 114, "area": "Direito Constitucional", "q": "É cláusula pétrea (não pode ser abolida):", "options": ["O voto obrigatório", "O voto secreto", "A reeleição", "O número de deputados"], "answer": 1, "explain": "O voto direto, secreto, universal e periódico é cláusula pétrea. A obrigatoriedade não é."},
     {"id": 115, "area": "Direito Constitucional", "q": "Medida Provisória tem força de lei e vigência inicial de:", "options": ["30 dias", "45 dias", "60 dias", "90 dias"], "answer": 2, "explain": "60 dias, prorrogáveis por mais 60 (total 120 dias)."},
-
-    # --- NOVO: DIREITO CONSTITUCIONAL - COMPETÊNCIAS (161-170) ---
     {"id": 161, "area": "Direito Constitucional", "difficulty": "Fácil", "q": "Compete privativamente à União legislar sobre:", "options": ["Direito Civil, Penal e Processual", "Saúde e Meio Ambiente", "Junta Comercial", "Gás Canalizado"], "answer": 0, "explain": "Art. 22, CF: Legislar sobre direito civil, comercial, penal, processual, eleitoral, agrário, marítimo, aeronáutico, espacial e do trabalho é competência privativa da União."},
     {"id": 162, "area": "Direito Constitucional", "difficulty": "Fácil", "q": "Cuidar da saúde e assistência pública, da proteção e garantia das pessoas portadoras de deficiência é competência:", "options": ["Privativa da União", "Exclusiva dos Estados", "Comum da União, Estados, DF e Municípios", "Apenas dos Municípios"], "answer": 2, "explain": "Art. 23, CF: Competência material comum (todos os entes devem atuar)."},
     {"id": 163, "area": "Direito Constitucional", "difficulty": "Média", "q": "Legislar sobre previdência social, proteção e defesa da saúde é competência:", "options": ["Privativa da União", "Concorrente da União, Estados e DF", "Exclusiva da União", "Apenas dos Municípios"], "answer": 1, "explain": "Art. 24, CF: Competência legislativa concorrente. A União faz normas gerais e os Estados suplementam."},
@@ -146,7 +142,7 @@ QUESTIONS = [
     {"id": 169, "area": "Direito Constitucional", "difficulty": "Fácil", "q": "Ao Distrito Federal são atribuídas as competências legislativas:", "options": ["Apenas dos Estados", "Apenas dos Municípios", "Reservadas aos Estados e aos Municípios", "Apenas da União"], "answer": 2, "explain": "Art. 32, § 1º: Ao DF são atribuídas as competências legislativas reservadas aos Estados e Municípios (natureza híbrida)."},
     {"id": 170, "area": "Direito Constitucional", "difficulty": "Média", "q": "Legislar sobre trânsito e transporte é competência:", "options": ["Dos Municípios", "Dos Estados", "Privativa da União", "Concorrente"], "answer": 2, "explain": "Art. 22, XI: Privativa da União. O Município legisla apenas sobre o 'trânsito local' (estacionamento, circulação, sentido de via), mas as normas gerais (CTB) são federais."},
 
-    # -------------------- PROCESSO CIVIL (Geral) --------------------
+    # -------------------- PROCESSO CIVIL --------------------
     {"id": 61, "area": "Processo Civil", "q": "O processo civil busca, em geral:", "options": ["punir com prisão", "tutelar direitos e resolver conflitos", "eleger representantes", "aplicar multas administrativas sempre"], "answer": 1, "explain": "Processo civil tutela direitos em conflitos, com garantias processuais."},
     {"id": 62, "area": "Processo Civil", "q": "Citação é o ato de:", "options": ["punir o réu", "chamar o réu ao processo e dar ciência da demanda", "encerrar o processo", "criar lei"], "answer": 1, "explain": "Citação chama o réu e inicia a relação processual de forma válida."},
     {"id": 63, "area": "Processo Civil", "q": "O contraditório envolve, em geral:", "options": ["silêncio das partes", "participação e possibilidade de influenciar a decisão", "decisão surpresa", "apenas falar por último"], "answer": 1, "explain": "Contraditório é participação efetiva, não só formal."},
@@ -173,7 +169,7 @@ QUESTIONS = [
     {"id": 119, "area": "Processo Civil", "q": "Não havendo bens penhoráveis, a execução será:", "options": ["Extinta imediatamente", "Suspensa", "Transformada em prisão", "Transferida para a União"], "answer": 1, "explain": "O juiz suspende a execução (prescrição intercorrente pode começar a correr)."},
     {"id": 120, "area": "Processo Civil", "q": "O juízo de admissibilidade da Apelação é feito:", "options": ["Pelo juiz de 1º grau", "Apenas pelo Tribunal (2º grau)", "Pelo escrivão", "Pelo MP"], "answer": 1, "explain": "No CPC/15, o juiz de 1º grau não faz admissibilidade; remete direto ao Tribunal."},
 
-    # -------------------- PROCESSO PENAL (Geral) --------------------
+    # -------------------- PROCESSO PENAL --------------------
     {"id": 81, "area": "Processo Penal", "q": "Presunção de inocência significa:", "options": ["culpado desde a denúncia", "ninguém é considerado culpado até trânsito em julgado", "culpado no flagrante sempre", "só vale para réu primário"], "answer": 1, "explain": "A regra é não considerar culpado até o trânsito em julgado."},
     {"id": 82, "area": "Processo Penal", "q": "Inquérito policial é, em geral:", "options": ["fase do julgamento", "procedimento investigativo", "sentença", "recurso"], "answer": 1, "explain": "O inquérito é procedimento para apurar autoria e materialidade."},
     {"id": 83, "area": "Processo Penal", "q": "A ação penal pública, em regra, é proposta pelo:", "options": ["juiz", "delegado", "Ministério Público", "advogado da vítima"], "answer": 2, "explain": "Em regra, o MP é o titular da ação penal pública."},
@@ -212,17 +208,10 @@ QUESTIONS = [
     {"id": 134, "area": "Ética", "q": "Os honorários de sucumbência pertencem:", "options": ["Ao cliente", "Ao advogado", "Ao Estado", "Ao juiz"], "answer": 1, "explain": "O Estatuto define que os honorários de sucumbência são direito do advogado."},
     {"id": 135, "area": "Ética", "q": "O mandato judicial (procuração) extingue-se por:", "options": ["Mero decurso de tempo", "Revogação pelo cliente ou renúncia pelo advogado", "Fim do ano forense", "Vontade do juiz"], "answer": 1, "explain": "A revogação ou renúncia encerram o mandato, devendo ser notificadas."},
 ]
-from question_bank import generate_extra_questions
 
-TARGET_TOTAL = 5000
-
-max_id = max(q["id"] for q in QUESTIONS)
-extras = generate_extra_questions(
-    start_id=max_id + 1,
-    target_total=TARGET_TOTAL
-)
-
-QUESTIONS.extend(extras)
+# REMOVIDO O GERADOR DE QUESTÕES FALSAS QUE CAUSAVA DUPLICAÇÃO
+# from question_bank import generate_extra_questions
+# ... lógica de duplicar deletada ...
 
 # =========================================================
 # FUNÇÕES AUXILIARES
@@ -238,8 +227,18 @@ def q_by_id(qid: int):
 
 def build_quiz(area: str, mode: str, n: int):
     pool = get_questions_by_area(area)
-    random.shuffle(pool)
-    selected = pool[:n]
+    
+    # PROTEÇÃO: Garante que não pede mais questões do que existem
+    # Se houver 15 questões e n=20, ajusta para 15.
+    available_count = len(pool)
+    n = min(n, available_count)
+    
+    if available_count > 0:
+        random.shuffle(pool)
+        selected = pool[:n]
+    else:
+        selected = []
+
     return {
         "area": area,
         "mode": mode,   # treino | prova
@@ -286,6 +285,7 @@ def start():
         n = 10
 
     quiz = build_quiz(area, mode, n)
+    
     # Se não encontrar perguntas para a área selecionada
     if not quiz["items"]:
         flash(f"Ainda não há perguntas cadastradas para {area}.")
@@ -302,13 +302,16 @@ def question():
         return redirect(url_for("index"))
 
     pos = quiz["pos"]
+    
+    # Se já passou do número de questões, vai pro resultado
     if pos >= quiz["n"]:
         return redirect(url_for("result"))
 
     qid = quiz["items"][pos]
     q = q_by_id(qid)
+    
     if not q:
-        flash("Pergunta não encontrada.")
+        flash("Erro ao carregar pergunta.")
         return redirect(url_for("index"))
 
     # tempo por pergunta no modo prova (segundos)
@@ -327,6 +330,7 @@ def question():
 def answer():
     quiz = session.get("quiz")
     if not quiz:
+        flash("Sessão expirada. Inicie novo quiz.")
         return redirect(url_for("index"))
 
     pos = quiz["pos"]
@@ -335,6 +339,7 @@ def answer():
 
     qid = quiz["items"][pos]
     q = q_by_id(qid)
+    
     if not q:
         flash("Pergunta inválida.")
         return redirect(url_for("index"))
@@ -436,11 +441,14 @@ def review():
         flash("Você não tem erros para revisar ainda.")
         return redirect(url_for("index"))
 
+    # Cria um quiz especial de revisão
+    n_review = min(20, len(wrong_ids))
+    
     quiz = {
         "area": "Revisão de Erros",
         "mode": "treino",
-        "n": min(20, len(wrong_ids)),
-        "items": wrong_ids[:20],
+        "n": n_review,
+        "items": wrong_ids[:n_review],
         "pos": 0,
         "score": 0,
         "answers": [],
@@ -458,4 +466,4 @@ def reset():
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
