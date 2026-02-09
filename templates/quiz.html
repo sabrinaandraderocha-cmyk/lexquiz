@@ -15,95 +15,147 @@
     
     .timer-container {
         background: #e2e8f0;
-        height: 6px;
-        border-radius: 3px;
-        margin-bottom: 20px;
+        height: 8px;
+        border-radius: 4px;
+        margin-bottom: 25px;
         overflow: hidden;
         position: relative;
     }
     
     .timer-bar {
         height: 100%;
-        background: var(--gold); /* Dourado */
+        background: var(--gold);
         width: 100%;
-        transform-origin: left;
-        transition: transform 1s linear;
+        transition: width linear;
     }
 
     .ghost-link {
         display: block;
         text-align: center;
-        margin-top: 15px;
+        margin-top: 20px;
         color: #94a3b8;
         text-decoration: none;
         font-size: 0.85rem;
+        transition: 0.2s;
     }
-    .ghost-link:hover { color: var(--primary); text-decoration: underline; }
+    .ghost-link:hover { color: var(--error); }
+
+    .option-label {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        margin-bottom: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: white;
+    }
+    .option-label:hover {
+        border-color: #cbd5e1;
+        background: #f8fafc;
+    }
+    .option-label input[type="radio"] {
+        margin-right: 15px;
+        transform: scale(1.2);
+        accent-color: var(--primary);
+    }
+    .option-label:has(input:checked) {
+        border-color: var(--primary);
+        background: #f1f5f9;
+        font-weight: 500;
+    }
+
+    .feedback-card {
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        border: 1px solid transparent;
+    }
+    .fb-correct { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+    .fb-wrong { background: #fef2f2; border-color: #fca5a5; color: #991b1b; }
 </style>
 
 <div style="max-width: 700px; margin: 0 auto;">
 
     {% if session.get('last_feedback') %}
         {% set fb = session.get('last_feedback') %}
-        <div class="feedback-box {{ 'correct' if fb.is_correct else 'wrong' }}">
-            <div style="display: flex; align-items: start; gap: 10px;">
-                <i class="fas {{ 'fa-check-circle' if fb.is_correct else 'fa-times-circle' }}" style="font-size: 1.2rem; margin-top: 2px;"></i>
+        
+        <div class="feedback-card {{ 'fb-correct' if fb.is_correct else 'fb-wrong' }}">
+            <div style="display: flex; align-items: start; gap: 15px;">
+                <i class="fas {{ 'fa-check-circle' if fb.is_correct else 'fa-times-circle' }}" style="font-size: 2rem;"></i>
                 <div>
-                    <strong>{{ 'Resposta Correta!' if fb.is_correct else 'Resposta Incorreta.' }}</strong>
-                    <div style="margin-top: 5px; font-size: 0.95rem; opacity: 0.9;">
-                        {{ fb.explain }}
+                    <h3 style="margin-bottom: 10px;">
+                        {{ 'Resposta Correta!' if fb.is_correct else 'Resposta Incorreta.' }}
+                    </h3>
+                    <div style="font-size: 1rem; line-height: 1.6; opacity: 0.9;">
+                        <strong>Explicação:</strong> {{ fb.explain }}
                     </div>
                 </div>
             </div>
         </div>
+
+        <a href="{{ url_for('question') }}" class="btn-primary">
+            Próxima Questão <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+        </a>
+
+    {% else %}
+        <div class="quiz-header">
+            <div>
+                <span style="background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; margin-right: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    {{ quiz.area }}
+                </span>
+                {% if q.difficulty %}
+                    <span style="font-size: 0.8rem; background: #e2e8f0; padding: 4px 10px; border-radius: 20px;">
+                        {{ q.difficulty }}
+                    </span>
+                {% endif %}
+            </div>
+            <div>
+                Questão <strong style="color: var(--primary);">{{ pos + 1 }}</strong> de {{ quiz.n }}
+            </div>
+        </div>
+
+        <div class="card">
+            
+            {% if time_limit %}
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: var(--error); font-weight: 700;">
+                    <span><i class="fas fa-stopwatch"></i> Tempo Restante</span>
+                    <span id="timerText">{{ time_limit }}s</span>
+                </div>
+                <div class="timer-container">
+                    <div class="timer-bar" id="timerBar" style="width: 100%;"></div>
+                </div>
+            {% endif %}
+
+            <h2 style="margin-top: 0; margin-bottom: 25px; color: var(--primary); line-height: 1.5; font-size: 1.25rem;">
+                {{ q.q }}
+            </h2>
+
+            <form method="post" action="{{ url_for('answer') }}" id="quizForm">
+                
+                {% for opt in q.options %}
+                <label class="option-label">
+                    <input type="radio" name="choice" value="{{ loop.index0 }}" required>
+                    <span>
+                        <strong style="margin-right: 8px; color: var(--text-light);">
+                            {{ loop.index | string | replace('1','A')|replace('2','B')|replace('3','C')|replace('4','D') }})
+                        </strong> 
+                        {{ opt }}
+                    </span>
+                </label>
+                {% endfor %}
+
+                <button class="btn-primary" type="submit" style="margin-top: 25px;">
+                    Confirmar Resposta 
+                </button>
+                
+                <a class="ghost-link" href="{{ url_for('reset') }}" onclick="return confirm('Tem certeza? Seu progresso será perdido.');">
+                    <i class="fas fa-sign-out-alt"></i> Cancelar e voltar ao início
+                </a>
+            </form>
+        </div>
     {% endif %}
-
-    <div class="quiz-header">
-        <div>
-            <span style="background: var(--primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; margin-right: 8px;">
-                {{ quiz.area }}
-            </span>
-            <span>{{ quiz.mode|capitalize }}</span>
-        </div>
-        <div>
-            Questão <span style="color: var(--primary); font-size: 1.1rem;">{{ pos + 1 }}</span> de {{ quiz.n }}
-        </div>
-    </div>
-
-    <div class="card">
-        
-        {% if time_limit %}
-            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: #ef4444; font-weight: bold;">
-                <span><i class="fas fa-stopwatch"></i> Tempo Restante</span>
-                <span id="timerText">{{ time_limit }}s</span>
-            </div>
-            <div class="timer-container">
-                <div class="timer-bar" id="timerBar"></div>
-            </div>
-        {% endif %}
-
-        <h2 class="question" style="margin-top: 0; color: var(--primary); line-height: 1.4;">
-            {{ q.q }}
-        </h2>
-
-        <form method="post" action="{{ url_for('answer') }}">
-            
-            {% for opt in q.options %}
-            <label class="quiz-option">
-                <input type="radio" name="choice" value="{{ loop.index0 }}" required>
-                <span style="margin-left: 8px;">{{ opt }}</span>
-            </label>
-            {% endfor %}
-
-            <button class="btn-primary" type="submit" style="margin-top: 20px;">
-                Confirmar Resposta <i class="fas fa-check"></i>
-            </button>
-            
-            <a class="ghost-link" href="{{ url_for('reset') }}">
-                <i class="fas fa-sign-out-alt"></i> Sair e voltar ao início
-            </a>
-        </form>
-    </div>
 
 </div>
 
@@ -111,32 +163,32 @@
 
 {% block scripts %}
 <script>
-    // Lógica simples do Timer para o Modo Prova
-    const timeLimit = {{ time_limit if time_limit else "null" }};
+    // Lógica do Timer (Apenas se não estivermos na tela de feedback e houver tempo)
+    const timeLimit = {{ time_limit if (time_limit and not session.get('last_feedback')) else "null" }};
     
     if (timeLimit) {
         let timeLeft = timeLimit;
         const timerBar = document.getElementById('timerBar');
         const timerText = document.getElementById('timerText');
+        const form = document.getElementById('quizForm');
         
-        // CSS Animation para a barra diminuir suavemente
-        timerBar.style.transition = `width ${timeLimit}s linear`;
-        
-        // Pequeno delay para garantir que o CSS carregou antes de iniciar a animação
+        // Inicia a animação da barra via CSS Transition
+        // O setTimeout garante que o navegador renderizou a largura 100% antes de mudar para 0%
         setTimeout(() => {
-            timerBar.style.width = '0%';
+            if(timerBar) {
+                timerBar.style.transition = `width ${timeLimit}s linear`;
+                timerBar.style.width = '0%';
+            }
         }, 100);
 
-        // Contador numérico
         const interval = setInterval(() => {
             timeLeft--;
             if (timeLeft >= 0) {
-                timerText.innerText = timeLeft + "s";
+                if(timerText) timerText.innerText = timeLeft + "s";
             } else {
                 clearInterval(interval);
-                alert("Tempo esgotado! Passando para a próxima...");
-                // Aqui você poderia forçar o submit do form automaticamente
-                // document.querySelector('form').submit();
+                // Submete o formulário automaticamente (conta como erro/em branco no backend se não selecionado)
+                if(form) form.submit();
             }
         }, 1000);
     }
