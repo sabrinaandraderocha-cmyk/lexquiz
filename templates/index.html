@@ -3,48 +3,73 @@
 {% block content %}
 
 <style>
+    /* Estilos locais para o Index */
     .form-grid { display: flex; gap: 20px; }
     .form-col { flex: 1; }
 
     @media (max-width: 600px) {
-        .form-grid { flex-direction: column; gap: 0; }
+        .form-grid { flex-direction: column; gap: 15px; }
     }
 
-    .bank-box{
-        margin-top:30px;
-        padding-top:20px;
-        border-top:1px solid #e2e8f0;
-        text-align:center;
+    .bank-box {
+        margin-top: 40px;
+        padding-top: 25px;
+        border-top: 1px solid #e2e8f0;
+        text-align: center;
     }
 
-    .area-pill{
-        display:inline-block;
-        padding:6px 12px;
-        margin:4px;
-        border-radius:20px;
-        background:#f1f5f9;
-        font-size:0.8rem;
-        font-weight:600;
-        color:#334155;
+    .area-pill {
+        display: inline-block;
+        padding: 6px 14px;
+        margin: 5px;
+        border-radius: 20px;
+        background: #f1f5f9;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+        border: 1px solid #e2e8f0;
     }
 
-    .big-number{
-        font-size:1.6rem;
-        font-weight:700;
-        color:var(--primary);
+    .big-number {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 15px;
+    }
+    
+    /* Estilo para mensagens de erro/aviso */
+    .alert-box {
+        background-color: #fee2e2;
+        border: 1px solid #ef4444;
+        color: #b91c1c;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
     }
 </style>
 
 <div style="max-width: 650px; margin: 0 auto;">
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert-box">
+                {% for message in messages %}
+                    <div><i class="fas fa-exclamation-circle"></i> {{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <section class="card hero">
 
-        <div style="text-align: center; margin-bottom: 25px;">
+        <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: var(--primary); margin-bottom: 10px;">
                 <i class="fas fa-graduation-cap" style="color: var(--gold);"></i>
                 Comece seus Estudos
             </h1>
 
-            <p class="muted" style="color: #64748b; font-size: 0.95rem; line-height: 1.5;">
+            <p class="muted" style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">
                 O <strong>Modo Treino</strong> oferece feedback imediato.<br>
                 O <strong>Modo Prova</strong> simula a pressão real do exame.
             </p>
@@ -52,7 +77,7 @@
 
         <form class="form" method="post" action="{{ url_for('start') }}">
             
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 20px;">
                 <label class="label" for="area">
                     <i class="fas fa-book"></i> Área Jurídica
                 </label>
@@ -92,27 +117,30 @@
                 </div>
             </div>
 
-            <button class="btn-primary" type="submit" style="margin-top: 20px;">
+            <button class="btn-primary" type="submit" style="margin-top: 25px; width: 100%;">
                 Iniciar Quiz
                 <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
             </button>
         </form>
 
-        <!-- BANCO DE QUESTÕES -->
         <div class="bank-box">
-
             <div class="big-number">
-                {{ total_questions }} questões disponíveis
+                {{ total_questions }} questões
+            </div>
+            
+            <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 10px;">
+                Disponíveis por área:
             </div>
 
-            <div style="margin-top:10px;">
+            <div>
                 {% for a in areas %}
+                    {% if counts[a] > 0 %}
                     <span class="area-pill">
-                        {{ a }}: {{ counts[a] }}
+                        {{ a }}: <strong>{{ counts[a] }}</strong>
                     </span>
+                    {% endif %}
                 {% endfor %}
             </div>
-
         </div>
 
     </section>
