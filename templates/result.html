@@ -24,10 +24,34 @@
         Aproveitamento: {{ percent }}%
     </p>
 
-    <div class="actions" style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
-      <a class="btn-primary" href="{{ url_for('reset') }}" style="max-width: 200px;">
+    <!-- DESEMPENHO POR ÁREA -->
+    {% if per_area %}
+      <div class="card" style="margin: 18px auto 0; padding: 14px; max-width: 720px; text-align: left;">
+        <h3 style="margin: 0 0 10px 0; color: var(--primary);">
+          <i class="fas fa-chart-pie"></i> Desempenho por área
+        </h3>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          {% for area, v in per_area.items() %}
+            <div style="background:#f1f5f9; padding:10px 12px; border-radius:12px; font-weight:600; color:#334155;">
+              {{ area }}: <strong>{{ v.correct }}</strong>/{{ v.total }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="actions" style="margin-top: 22px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+      <a class="btn-primary" href="{{ url_for('reset') }}" style="max-width: 220px;">
         <i class="fas fa-redo"></i> Jogar de Novo
       </a>
+
+      {% if session.get("wrong_ids") and session.get("wrong_ids")|length > 0 %}
+        <a class="btn-primary" href="{{ url_for('review') }}" style="max-width: 260px;">
+          <i class="fas fa-bullseye"></i> Revisar erros ({{ session.get("wrong_ids")|length }})
+        </a>
+      {% endif %}
+
       <a href="{{ url_for('index') }}" style="display: flex; align-items: center; justify-content: center; padding: 0 20px; color: #64748b; text-decoration: none; font-weight: 600;">
         <i class="fas fa-home"></i>&nbsp; Início
       </a>
