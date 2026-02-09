@@ -27,6 +27,10 @@ app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(24)
 # =========================================================
 APP_NAME = "LexQuiz"
 
+# Se quiser nunca mais ter mismatch, gere as áreas a partir das questões (recomendado)
+# (você pode manter AREAS fixo, mas isso evita bugs de texto)
+# AREAS = sorted({(q.get("area") or "").strip() for q in QUESTIONS if q.get("area")})
+
 AREAS = [
     "Direito Civil",
     "Direito Penal",
@@ -59,8 +63,13 @@ QUESTIONS = [
 # =========================================================
 # FUNÇÕES AUXILIARES
 # =========================================================
+def norm_area(s: str) -> str:
+    """Normaliza texto de área para evitar mismatch por espaços invisíveis."""
+    return (s or "").strip()
+
 def get_questions_by_area(area: str):
-    return [q for q in QUESTIONS if q.get("area") == area]
+    area = norm_area(area)
+    return [q for q in QUESTIONS if norm_area(q.get("area")) == area]
 
 def q_by_id(qid: int):
     for q in QUESTIONS:
@@ -92,9 +101,10 @@ def build_quiz(area: str, mode: str, n: int):
 # =========================================================
 @app.get("/")
 def index():
+    # counts com normalização (evita falhas se alguma questão tiver espaço no "area")
     counts = {a: 0 for a in AREAS}
     for q in QUESTIONS:
-        a = q.get("area")
+        a = norm_area(q.get("area"))
         if a in counts:
             counts[a] += 1
 
@@ -108,11 +118,14 @@ def index():
 
 @app.post("/start")
 def start():
-    area = request.form.get("area", "")
-    mode = request.form.get("mode", "treino")
-    n_raw = request.form.get("n", "10")
+    # CORREÇÃO PRINCIPAL: strip no que vem do form
+    area = norm_area(request.form.get("area"))
+    mode = (request.form.get("mode") or "treino").strip()
+    n_raw = (request.form.get("n") or "10").strip()
 
-    if area not in AREAS:
+    # validação robusta: compara com AREAS normalizadas
+    areas_norm = [norm_area(a) for a in AREAS]
+    if area not in areas_norm:
         flash("Escolha uma área válida.")
         return redirect(url_for("index"))
 
@@ -222,12 +235,12 @@ def result():
             continue
 
         q_data = {
-            "area": q["area"],
-            "q": q["q"],
-            "options": q["options"],
-            "chosen": a["chosen"],
-            "correct": a["correct"],
-            "is_correct": a["is_correct"],
+            "area": q.get("area", ""),
+            "q": q.get("q", ""),
+            "options": q.get("options", []),
+            "chosen": a.get("chosen", -1),
+            "correct": a.get("correct", -1),
+            "is_correct": a.get("is_correct", False),
             "explain": q.get("explain", ""),
         }
         if "difficulty" in q:
@@ -240,11 +253,11 @@ def result():
 
     per_area = {}
     for d in details:
-        area = d["area"]
+        area = norm_area(d.get("area"))
         if area not in per_area:
             per_area[area] = {"total": 0, "correct": 0}
         per_area[area]["total"] += 1
-        if d["is_correct"]:
+        if d.get("is_correct"):
             per_area[area]["correct"] += 1
 
     session["last_per_area"] = per_area
@@ -284,6 +297,8 @@ def review():
 def reset():
     session.pop("quiz", None)
     session.pop("last_feedback", None)
+    session.pop("wrong_ids", None)
+    session.pop("last_per_area", None)
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
