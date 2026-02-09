@@ -15,12 +15,14 @@ app = Flask(
 
 # Configuração do WhiteNoise para arquivos estáticos no Render
 root_dir = os.path.dirname(os.path.abspath(__file__))
-static_dir = os.path.join(root_dir, 'static')
+static_dir = os.path.join(root_dir, "static")
 
+# serve /static no Render
 if os.path.exists(static_dir):
-    app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_dir, prefix='static/')
+    app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_dir, prefix="static/")
 
 # Chave secreta (Tenta pegar do ambiente, senão gera uma aleatória)
+# Recomendado: definir SECRET_KEY no Render (Settings -> Environment)
 app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(24)
 
 APP_NAME = "LexQuiz"
@@ -261,7 +263,6 @@ def build_quiz(area: str, mode: str, n: int):
 # =========================================================
 @app.get("/")
 def index():
-    # counts com normalização (evita falhas se alguma questão tiver espaço no "area")
     counts = {a: 0 for a in AREAS}
     for q in QUESTIONS:
         a = norm_area(q.get("area"))
@@ -278,12 +279,10 @@ def index():
 
 @app.post("/start")
 def start():
-    # CORREÇÃO PRINCIPAL: strip no que vem do form
     area = norm_area(request.form.get("area"))
     mode = (request.form.get("mode") or "treino").strip()
     n_raw = (request.form.get("n") or "10").strip()
 
-    # validação robusta: compara com AREAS normalizadas
     areas_norm = [norm_area(a) for a in AREAS]
     if area not in areas_norm:
         flash("Escolha uma área válida.")
@@ -450,6 +449,15 @@ def review():
     }
 
     session["quiz"] = quiz
+    session.pop("last_feedback", None)
+    return redirect(url_for("question"))
+
+# =========================================================
+# NOVO: PRÓXIMA QUESTÃO (MODO TREINO)
+# =========================================================
+@app.get("/next")
+def next_question():
+    # limpa o feedback e deixa /q renderizar a próxima pergunta
     session.pop("last_feedback", None)
     return redirect(url_for("question"))
 
