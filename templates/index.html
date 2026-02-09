@@ -1,149 +1,91 @@
-{% extends "base.html" %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Plataforma de estudos para concursos jurídicos e OAB.">
+  
+  <title>{{ app_name }} | LexQuiz</title>
 
-{% block content %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<style>
-    /* Estilos locais para o Index */
-    .form-grid { display: flex; gap: 20px; }
-    .form-col { flex: 1; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    @media (max-width: 600px) {
-        .form-grid { flex-direction: column; gap: 15px; }
-    }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    .bank-box {
-        margin-top: 40px;
-        padding-top: 25px;
-        border-top: 1px solid #e2e8f0;
-        text-align: center;
-    }
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
+</head>
 
-    .area-pill {
-        display: inline-block;
-        padding: 6px 14px;
-        margin: 5px;
-        border-radius: 20px;
-        background: #f1f5f9;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #334155;
-        border: 1px solid #e2e8f0;
-    }
+<body>
 
-    .big-number {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--primary);
-        margin-bottom: 15px;
-    }
-    
-    /* Estilo para mensagens de erro/aviso */
-    .alert-box {
-        background-color: #fee2e2;
-        border: 1px solid #ef4444;
-        color: #b91c1c;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-</style>
+  <header class="topbar">
+    <div class="container topbar-inner">
 
-<div style="max-width: 650px; margin: 0 auto;">
-    
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="alert-box">
-                {% for message in messages %}
-                    <div><i class="fas fa-exclamation-circle"></i> {{ message }}</div>
-                {% endfor %}
+      <a href="{{ url_for('index') }}" class="brand-link" style="text-decoration: none; color: inherit;">
+        <div class="brand">
+            <img 
+              src="{{ url_for('static', filename='logo.png') }}" 
+              alt="Logo LexQuiz" 
+              class="logo" 
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            >
+            <i class="fas fa-balance-scale" style="display:none; font-size: 2rem; color: var(--gold); margin-right: 10px;"></i>
+
+            <div class="brand-text">
+                <div class="brand-title">{{ app_name }}</div>
+                <div class="brand-subtitle">Estudos Jurídicos</div>
             </div>
-        {% endif %}
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="{{ url_for('index') }}" class="nav-item">
+          <i class="fa-solid fa-house"></i> 
+          <span class="nav-text">Início</span>
+        </a>
+
+        <a href="{{ url_for('reset') }}" class="nav-item btn-reset" title="Reiniciar Quiz">
+          <i class="fa-solid fa-rotate"></i> 
+          <span class="nav-text">Reiniciar</span>
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="container main-content">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for msg in messages %}
+            <div class="flash-message">
+              <i class="fa-solid fa-circle-exclamation"></i> {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
     {% endwith %}
 
-    <section class="card hero">
+    {% block content %}{% endblock %}
 
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: var(--primary); margin-bottom: 10px;">
-                <i class="fas fa-graduation-cap" style="color: var(--gold);"></i>
-                Comece seus Estudos
-            </h1>
+  </main>
 
-            <p class="muted" style="color: #64748b; font-size: 0.95rem; line-height: 1.6;">
-                O <strong>Modo Treino</strong> oferece feedback imediato.<br>
-                O <strong>Modo Prova</strong> simula a pressão real do exame.
-            </p>
-        </div>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <strong>⚖️ {{ app_name }}</strong> &copy; 2026
+      </div>
+      
+      <div class="footer-right">
+        <small>Foco na aprovação 🚀</small>
+      </div>
+    </div>
+  </footer>
 
-        <form class="form" method="post" action="{{ url_for('start') }}">
-            
-            <div style="margin-bottom: 20px;">
-                <label class="label" for="area">
-                    <i class="fas fa-book"></i> Área Jurídica
-                </label>
+  {% block scripts %}{% endblock %}
 
-                <select class="select" name="area" id="area" required>
-                    <option value="" disabled selected>Selecione a matéria...</option>
-                    {% for a in areas %}
-                        <option value="{{ a }}">{{ a }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-grid">
-                <div class="form-col">
-                    <label class="label" for="mode">
-                        <i class="fas fa-toggle-on"></i> Modo
-                    </label>
-
-                    <select class="select" name="mode" id="mode">
-                        <option value="treino">Treino 🧠</option>
-                        <option value="prova">Prova ⏱️</option>
-                    </select>
-                </div>
-
-                <div class="form-col">
-                    <label class="label" for="n">
-                        <i class="fas fa-layer-group"></i> Questões (5-20)
-                    </label>
-
-                    <input class="input"
-                           type="number"
-                           name="n"
-                           id="n"
-                           min="5"
-                           max="20"
-                           value="10">
-                </div>
-            </div>
-
-            <button class="btn-primary" type="submit" style="margin-top: 25px; width: 100%;">
-                Iniciar Quiz
-                <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
-            </button>
-        </form>
-
-        <div class="bank-box">
-            <div class="big-number">
-                {{ total_questions }} questões
-            </div>
-            
-            <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 10px;">
-                Disponíveis por área:
-            </div>
-
-            <div>
-                {% for a in areas %}
-                    {% if counts[a] > 0 %}
-                    <span class="area-pill">
-                        {{ a }}: <strong>{{ counts[a] }}</strong>
-                    </span>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-
-    </section>
-</div>
-
-{% endblock %}
+</body>
+</html>
